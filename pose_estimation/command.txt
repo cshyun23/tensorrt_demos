@@ -1,0 +1,43 @@
+conver2onnx
+HRNET
+python3 torch2onnx.py --outputDir save/ --cfg ~/deep-high-resolution-net.pytorch/experiments/coco/hrnet/w32_256x192_adam_lr1e-3.yaml TEST.MODEL_FILE ~/deep-high-resolution-net.pytorch/models/pytorch/pose_coco/pose_hrnet_w32_256x192.pth
+
+RESNET
+python3 torch2onnx.py --outputDir save/ --cfg ~/deep-high-resolution-net.pytorch/experiments/coco/resnet/res50_256x192_d256x3_adam_lr1e-3.yaml TEST.MODEL_FILE ~/deep-high-resolution-net.pytorch/models/pytorch/pose_coco/pose_resnet_50_256x192.pth
+
+HOURGLASS
+python3 torch2onnx.py --outputDir save/ --cfg ~/deep-high-resolution-net.pytorch/experiments/coco/hourglass/hg1_256x192_d256x3_adam_lr2.5e-4.yaml TEST.MODEL_FILE ~/deep-high-resolution-net.pytorch/models/pytorch/pose_coco/pose_hourglass_1_256x192.pth
+
+
+conver2trt
+HRNET
+python3 onnx2tensorrt_pose.py -m save/pose_hrnet_w32_256x192.onnx -o save/fp16/ --fp16
+
+RESNET
+python3 onnx2tensorrt_pose.py -m save/pose_resnet_50_256x192.onnx -o save/fp16/ --fp16
+
+HOURGLASS
+python3 onnx2tensorrt_pose.py -m save/pose_hourglass_1_256x192.onnx -o save/fp16/ --fp16
+
+
+
+trt inference
+HRNET
+python3 trt_pose.py -m save/fp16/pose_hrnet_w32_256x192.trt
+
+RESNET
+python3 trt_pose.py -m save/fp16/pose_resnet_50_256x192.trt
+
+HOURGLASS
+python3 trt_pose.py -m save/fp16/pose_hourglass_1_256x192.trt
+
+
+
+trt eval
+python3 trt_pose_eval.py -m save/fp16/pose_hrnet_w32_256x192.trt
+
+
+batch-test
+python3 onnx2tensorrt_pose_batch.py -m save/pose_hrnet_w32_256x192.onnx -o save/batch/ --fp16
+
+python3 trt_pose_line_batch.py -m save/batch/pose_hrnet_w32_256x192.trt -v test/full_test.mp4
