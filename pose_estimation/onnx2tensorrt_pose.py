@@ -208,16 +208,16 @@ def main():
     model_name = args.model.split(".")[0]
     model_name = model_name.split("/")[-1]
     
-    if os.path.exists(args.outputDir+'%s.trt' % model_name) == False:
+    if os.path.exists(os.path.join(args.outputDir, '%s.trt' % model_name)) == False:
         engine = build_engine(
             model_name, args.model, args.fp16, args.int8, args.dla_core, args.verbose)
         if engine is None:
             raise SystemExit('ERROR: failed to build the TensorRT engine!')
     else:
-        print(args.outputDir + '%s.trt' % model_name, "already exists")
+        print(os.path.join(args.outputDir, '%s.trt' % model_name), "already exists")
         exit()
 
-    engine_path = args.outputDir + '%s.trt' % model_name
+    engine_path = os.path.join(args.outputDir, '%s.trt' % model_name)
     with open(engine_path, 'wb') as f:
         f.write(engine.serialize())
     print('Serialized the TensorRT engine to file: %s' % engine_path)

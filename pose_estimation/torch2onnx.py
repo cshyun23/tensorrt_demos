@@ -121,7 +121,7 @@ def main():
     #print(pose_model_name)
     #print(w,h)
 
-    onnx_model_path = args.outputDir + pose_model_name + ".onnx"
+    onnx_model_path = os.path.join(args.outputDir, pose_model_name + ".onnx")
     x = torch.ones((1,3,w,h)).cuda()
     torch_out = pose_model(x)
     
