@@ -99,14 +99,15 @@ def main():
     args = parse_args()
     update_config(cfg, args)
     pruning_ratio = args.pr
-    '''
-    pose_model = eval('models.'+cfg.MODEL.NAME+'_prun.get_pose_net')(
+    
+    pose_model = eval('models.'+cfg.MODEL.NAME+'_avoid.get_pose_net')(
         cfg, pruning_ratio, is_train=False
     )
     '''
     pose_model = eval('models.'+cfg.MODEL.NAME+'_prun_v2.get_pose_net')(
         cfg, is_train=False
     )
+    '''
     if cfg.TEST.MODEL_FILE:
         print('=> loading model from {}'.format(cfg.TEST.MODEL_FILE))
         pose_model.load_state_dict(torch.load(cfg.TEST.MODEL_FILE), strict=False)
